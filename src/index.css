@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+/* Hide mobile menu icon on wide screens to avoid overlap with desktop menu */
+@media (min-width: 1280px) {
+	.bx-menu {
+		display: none !important;
+	}
+}
