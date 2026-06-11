@@ -6,6 +6,7 @@ import Coord from './coord';
 import Harm from './harm';
 import Sim from './sim';
 import Tc from './tc';
+import Pot from './pot';
 
 function Menu() {
   // Estado interno para controlar qual tela exibir no "body" do componente
@@ -49,6 +50,13 @@ function Menu() {
       icone: <Zap className="w-8 h-8 text-red-600" />,
       descricao: 'Cálculos de faltas simétricas e assimétricas em barras do sistema.'
     },
+    {
+      id: 'potencia',
+      nome: 'Potência',
+      componente: <Pot onVoltar={() => setTelaAtiva('menu')} />,
+      icone: <ShieldAlert className="w-8 h-8 text-amber-600" />,
+      descricao: 'Cálculo de potência ativa, reativa e aparente em sistemas elétricos.'
+    }
   ];
 
   // Se a tela ativa não for o menu, renderiza o componente correspondente

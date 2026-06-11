@@ -5,6 +5,7 @@ import Tc from "./pages/tc";
 import Cc from "./pages/cc";
 import Coord from "./pages/coord";
 import Harm from "./pages/harm";
+import Pot from "./pages/pot";
 
 import { useState, useEffect } from "react";
 
@@ -32,6 +33,8 @@ function App() {
         return <Coord />;
       case "harm":
         return <Harm />;
+      case "pot":
+        return <Pot />;
       default:
         return <Menu />; // Caso dê algum erro, volta para o menu
     }
