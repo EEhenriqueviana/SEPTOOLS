@@ -186,7 +186,7 @@ function Pot() {
         <div className="h-80 w-full flex flex-col items-center">
           <h4 className="font-medium text-gray-700 mb-2">Formas de Onda: v(t) e i(t)</h4>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={timeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <LineChart data={timeData} margin={{ top: 10, right: 10, left: -20, bottom: 10 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="radianos" label={{ value: 'Ângulo (rad)', position: 'insideBottomRight', offset: -5 }} />
               <YAxis yAxisId="left" stroke="#2563eb" />
@@ -203,7 +203,7 @@ function Pot() {
         <div className="h-80 w-full flex flex-col items-center">
           <h4 className="font-medium text-gray-700 mb-2">Potência Instantânea: p(t)</h4>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={timeData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <LineChart data={timeData} margin={{ top: 10, right: 10, left: 0, bottom: 10 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="radianos" label={{ value: 'Ângulo (rad)', position: 'insideBottomRight', offset: -5 }} />
               <YAxis stroke="#16a34a" />
@@ -219,7 +219,7 @@ function Pot() {
         {/* DIV Unificada: Diagrama Polar + Valores de Saída */}
         <div className="w-full flex flex-col items-center lg:col-span-2 bg-white border border-gray-200 rounded-xl p-6 shadow-xs">
           <h4 className="font-medium text-gray-700 mb-4 w-full text-center lg:text-left border-b pb-2">
-            Diagrama Fasorial & Grandezas Resultantes (Polar PxQ)
+            Diagrama PxQ
           </h4>
           
           <div className="w-full flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-16">

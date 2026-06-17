@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { ShieldAlert, Zap, Layers, HelpCircle } from 'lucide-react';
+import { ShieldAlert, Zap, Layers } from 'lucide-react';
 
-function cc() {
+function Cc() {
   // --- ESTADOS DOS DADOS DE ENTRADA ---
   
   // 1. Dados da Concessionária (Barra 13.8 kV de referência padrão)
@@ -29,33 +29,25 @@ function cc() {
   const [rCabo2, setRCabo2] = useState('0.04');      // ohm/km
   const [xCabo2, setXCabo2] = useState('0.08');      // ohm/km
 
-  // --- MOTOR DE CÁLCULO MATEMÁTICO COMPLEXO ---
+  // --- MOTOR DE CÁLCULO MATEMÁTICO ---
   const resultados = useMemo(() => {
-    // Bases do Sistema (Adotando a potência do Trafo como S_base)
-    const S_base = parseFloat(sTrafo) * 1000; // VA
-    const V1_base = parseFloat(vNominal);     // V
-    const V2_base = parseFloat(vSec);         // V
+    const S_base = parseFloat(sTrafo) * 1000; 
+    const V1_base = parseFloat(vNominal);     
+    const V2_base = parseFloat(vSec);         
 
-    // Impedâncias de Base em Ohms
     const Z1_base = (V1_base * V1_base) / S_base;
     const Z2_base = (V2_base * V2_base) / S_base;
 
     // --- NÓ 1: CONCESSIONÁRIA ---
-    // Falta 3F define Z1 e Z2 da rede externa
     const I_cc3f_A = parseFloat(iCc3f) * 1000;
     const Z1_re_mag = V1_base / (Math.sqrt(3) * I_cc3f_A);
     const ang3f = Math.atan(parseFloat(xr3f));
     const R1_re = Z1_re_mag * Math.cos(ang3f);
     const X1_re = Z1_re_mag * Math.sin(ang3f);
 
-    // Falta 1F auxilia a achar Z0 da rede externa: Icc1f = 3*Vln / (2*Z1 + Z0)
-    const I_cc1f_A = parseFloat(iCc1f) * 1000;
-    const ang1f = Math.atan(parseFloat(xr1f));
-    // Simplificação clássica de malha industrial para parcelamento de componentes
     const R0_re = R1_re * 1.5; 
     const X0_re = X1_re * 1.5;
 
-    // Convertendo Concessionária para PU
     const Z1_re_pu = { re: R1_re / Z1_base, im: X1_re / Z1_base };
     const Z2_re_pu = { ...Z1_re_pu };
     const Z0_re_pu = { re: R0_re / Z1_base, im: X0_re / Z1_base };
@@ -66,13 +58,11 @@ function cc() {
     const X_c1_ohm = parseFloat(xCabo1) * len1_km;
     const Z_c1_pu = { re: R_c1_ohm / Z1_base, im: X_c1_ohm / Z1_base };
 
-    // Acumulado até a entrada do Trafo
     const Z1_ant_trafo = { re: Z1_re_pu.re + Z_c1_pu.re, im: Z1_re_pu.im + Z_c1_pu.im };
     const Z2_ant_trafo = { ...Z1_ant_trafo };
     const Z0_ant_trafo = { re: Z0_re_pu.re + Z_c1_pu.re, im: Z0_re_pu.im + Z_c1_pu.im };
 
     // --- IMPEDÂNCIA DO TRANSFORMADOR ---
-    const z_t_mag = parseFloat(zTrafoPct) / 100000; // Ajuste percentual básico
     const z_t_pu_mag = parseFloat(zTrafoPct) / 100;
     const angTrafo = Math.atan(parseFloat(xrTrafo));
     const R_t_pu = z_t_pu_mag * Math.cos(angTrafo);
@@ -81,15 +71,12 @@ function cc() {
     const Z1_t_pu = { re: R_t_pu, im: X_t_pu };
     const Z2_t_pu = { ...Z1_t_pu };
     
-    // Tratamento do caminho de Sequência Zero baseado no fechamento do Trafo
     let Z0_t_pu = { re: R_t_pu, im: X_t_pu };
     let isolaSequenciaZeroAtras = false;
 
     if (connPri === 'Delta' && connSec === 'Estrela-Aterrada') {
-      // Delta no primário bloqueia a seq zero da concessionária de passar ao secundário
       isolaSequenciaZeroAtras = true; 
     } else if (connSec === 'Delta') {
-      // Secundário em delta não abre caminho de seq zero para faltas a jusante
       Z0_t_pu = { re: 999999, im: 999999 }; 
     }
 
@@ -98,7 +85,7 @@ function cc() {
     const Z2_b2_pu = { re: Z2_ant_trafo.re + Z2_t_pu.re, im: Z2_ant_trafo.im + Z2_t_pu.im };
     let Z0_b2_pu = { re: Z0_ant_trafo.re + Z0_t_pu.re, im: Z0_ant_trafo.im + Z0_t_pu.im };
     if (isolaSequenciaZeroAtras) {
-      Z0_b2_pu = { re: Z1_t_pu.re, im: Z1_t_pu.im }; // Apenas a impedância do próprio trafo drena a falta à terra
+      Z0_b2_pu = { re: Z1_t_pu.re, im: Z1_t_pu.im }; 
     }
 
     // --- LINHA DO CABO 2 (Baixa Tensão) ---
@@ -110,25 +97,23 @@ function cc() {
     // Acumulado no QGBT (Barra 3)
     const Z1_qgbt_pu = { re: Z1_b2_pu.re + Z_c2_pu.re, im: Z1_b2_pu.im + Z_c2_pu.im };
     const Z2_qgbt_pu = { re: Z2_b2_pu.re + Z_c2_pu.re, im: Z2_b2_pu.im + Z_c2_pu.im };
-    const Z0_qgbt_pu = { re: Z0_b2_pu.re + Z_c2_pu.re * 3, im: Z0_b2_pu.im + Z_c2_pu.im * 3 }; // Retorno por cabo/terra triplica a resistência de seq zero de cabos isolados
+    const Z0_qgbt_pu = { re: Z0_b2_pu.re + Z_c2_pu.re * 3, im: Z0_b2_pu.im + Z_c2_pu.im * 3 }; 
 
-    // FUNÇÃO INTERNA PARA CALCULAR CURTOS COM BASE EM IMPEDÂNCIAS COMPLEXAS PU
     const calcularCurtosNaBarra = (Z1, Z2, Z0, V_base) => {
       const I_base = S_base / (V_base * Math.sqrt(3));
 
-      // 1. Curto Trifásico: Icc3f = V_pu / Z1
+      // 1. Curto Trifásico
       const z1_mod = Math.sqrt(Z1.re * Z1.re + Z1.im * Z1.im);
       const icc3f_pu = 1.0 / z1_mod;
       const icc3f_kA = (icc3f_pu * I_base) / 1000;
 
-      // 2. Curto Monofásico-Terra: Icc1f = 3*V_pu / (Z1 + Z2 + Z0)
+      // 2. Curto Monofásico-Terra
       const z_total_1f = { re: Z1.re + Z2.re + Z0.re, im: Z1.im + Z2.im + Z0.im };
       const z_tot_1f_mod = Math.sqrt(z_total_1f.re * z_total_1f.re + z_total_1f.im * z_total_1f.im);
       const icc1f_pu = 3.0 / z_tot_1f_mod;
       const icc1f_kA = (icc1f_pu * I_base) / 1000;
 
-      // 3. Curto Bifásico-Terra: Icc2fT -> Cálculo matricial simplificado do módulo paralelo
-      // Zeq = Z1 + (Z2 * Z0) / (Z2 + Z0)
+      // 3. Curto Bifásico-Terra
       const den = { re: Z2.re + Z0.re, im: Z2.im + Z0.im };
       const den_mod2 = den.re * den.re + den.im * den.im;
       const num = {
@@ -142,7 +127,6 @@ function cc() {
       const z_eq_2ft = { re: Z1.re + paralelo.re, im: Z1.im + paralelo.im };
       const z_eq_2ft_mod = Math.sqrt(z_eq_2ft.re * z_eq_2ft.re + z_eq_2ft.im * z_eq_2ft.im);
       
-      // Corrente total na falta escalada pela assimetria de terra
       const icc2ft_kA = (1.732 / z_eq_2ft_mod * I_base) / 1000 * 0.88; 
 
       return {
@@ -161,7 +145,7 @@ function cc() {
   }, [vNominal, iCc3f, xr3f, iCc1f, xr1f, compCabo1, rCabo1, xCabo1, sTrafo, vSec, zTrafoPct, xrTrafo, connPri, connSec, compCabo2, rCabo2, xCabo2]);
 
   return (
-    <div style={{ padding: '24px', fontFamily: 'Arial, sans-serif', backgroundColor: '#f1f5f9', minHeight: '100vh' }}>
+    <div style={{ padding: '24px', fontFamily: 'Arial, sans-serif', backgroundColor: '#f8fafc', minHeight: '100vh' }}>
       <h2 style={{ color: '#0f172a', fontWeight: 'bold', marginBottom: '24px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
         <ShieldAlert color="#dc2626" size={28} /> CALCULADORA DE CURTO-CIRCUITO INTERATIVA
       </h2>
@@ -275,7 +259,7 @@ function cc() {
 
         </div>
 
-        {/* COLUNA 2: DIAGRAMA UNIFILAR E PAINEL DE RESULTADOS EM TEMPO REAL */}
+        {/* COLUNA 2: DIAGRAMA UNIFILAR E PAINEL DE RESULTADOS */}
         <div style={{ backgroundColor: '#ffffff', padding: '24px', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <h3 style={{ margin: 0, fontSize: '16px', color: '#0f172a', fontWeight: 'bold', textAlign: 'center', borderBottom: '2px solid #f1f5f9', paddingBottom: '10px' }}>
             Diagrama Unifilar Dinâmico & Resultados de Falta
@@ -284,47 +268,41 @@ function cc() {
           {/* DIAGRAMA UNIFILAR EM SVG */}
           <div style={{ display: 'flex', justifyContent: 'center', backgroundColor: '#f8fafc', padding: '16px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
             <svg width="440" height="420" viewBox="0 0 440 420">
-              {/* Definições de Símbolos */}
               <g stroke="#334155" strokeWidth="2.5" fill="none">
-                {/* Fonte Equivalente Concessionária */}
                 <circle cx="220" cy="40" r="15" fill="#fef08a" />
                 <path d="M213 40 Q216 33 220 40 T227 40" strokeWidth="2" />
                 
-                {/* Barra 1: Concessionária */}
                 <line x1="140" y1="80" x2="300" y2="80" strokeWidth="4" stroke="#0f172a" />
                 
-                {/* Linha/Cabo MT */}
                 <line x1="220" y1="80" x2="220" y2="140" />
                 <path d="M215 105 L220 115 L225 105" />
 
-                {/* Transformador (Dois círculos entrelaçados) */}
                 <circle cx="220" cy="165" r="18" />
                 <circle cx="220" cy="190" r="18" />
 
-                {/* Barra 2: Baixa Tensão do Trafo */}
                 <line x1="140" y1="230" x2="300" y2="230" strokeWidth="4" stroke="#0f172a" />
 
-                {/* Linha/Cabo BT */}
                 <line x1="220" y1="230" x2="220" y2="310" />
                 <path d="M215 265 L220 275 L225 265" />
 
-                {/* Barra 3: QGBT */}
                 <line x1="140" y1="310" x2="300" y2="310" strokeWidth="4" stroke="#0f172a" />
                 
-                {/* Saídas/Alimentadores QGBT */}
                 <line x1="170" y1="310" x2="170" y2="340" />
                 <line x1="220" y1="310" x2="220" y2="340" />
                 <line x1="270" y1="310" x2="270" y2="340" />
               </g>
 
-              {/* Rótulos de Texto do Unifilar */}
+              {/* RÓTULOS DE TEXTO DINÂMICOS DO UNIFILAR */}
               <g fill="#475569" fontSize="11" fontWeight="bold" fontFamily="sans-serif">
                 <text x="245" y="45" fill="#a16207">CONCESSIONÁRIA ({parseFloat(vNominal)/1000} kV)</text>
                 <text x="50" y="85" fill="#0f172a">BARRA 1</text>
                 <text x="235" y="115" fontSize="10" fill="#2563eb">Cabo 1: {compCabo1}m</text>
                 
                 <text x="245" y="170" fill="#16a34a">TRAFO {sTrafo}kVA</text>
-                <text x="245" y="185" fontSize="10" fill="#16a34a">Δ - Yn</text>
+                {/* TEXTO ATUALIZADO DINAMICAMENTE ABAIXO */}
+                <text x="245" y="185" fontSize="10" fill="#16a34a">
+                  {connPri === 'Delta' ? 'Δ' : 'Y'} - {connSec === 'Estrela-Aterrada' ? 'Yn' : 'Δ'}
+                </text>
                 
                 <text x="50" y="235" fill="#0f172a">BARRA 2</text>
                 <text x="235" y="275" fontSize="10" fill="#7c3aed">Cabo 2: {compCabo2}m</text>
@@ -335,10 +313,9 @@ function cc() {
             </svg>
           </div>
 
-          {/* CARDS DE EXIBIÇÃO DE RESULTADOS POR BARRA */}
+          {/* CARDS DE EXIBIÇÃO DE RESULTADOS */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             
-            {/* RESULTADO BARRA 1 */}
             <div style={{ backgroundColor: '#fef08a', padding: '12px', borderRadius: '6px', borderLeft: '5px solid #ca8a04' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '13px', color: '#854d0e', marginBottom: '6px' }}>
                 <span>NÓ 1: BARRA DA CONCESSIONÁRIA ({parseFloat(vNominal)/1000} kV)</span>
@@ -350,7 +327,6 @@ function cc() {
               </div>
             </div>
 
-            {/* RESULTADO BARRA 2 */}
             <div style={{ backgroundColor: '#dcfce7', padding: '12px', borderRadius: '6px', borderLeft: '5px solid #16a34a' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '13px', color: '#166534', marginBottom: '6px' }}>
                 <span>NÓ 2: SECUNDÁRIO DO TRANSFORMADOR ({vSec} V)</span>
@@ -362,7 +338,6 @@ function cc() {
               </div>
             </div>
 
-            {/* RESULTADO BARRA 3 */}
             <div style={{ backgroundColor: '#f1f5f9', padding: '12px', borderRadius: '6px', borderLeft: '5px solid #475569' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '13px', color: '#1e293b', marginBottom: '6px' }}>
                 <span>NÓ 3: BARRAMENTO GERAL (QGBT) ({vSec} V)</span>
@@ -377,7 +352,7 @@ function cc() {
           </div>
 
           <p style={{ margin: 0, fontSize: '11px', color: '#64748b', textAlign: 'center', lineHeight: '1.4' }}>
-            *Os cálculos de curto-circuito assimétricos consideram o acoplamento mútuo e a atenuação provocada pelo triplo da impedância de sequência zero ($3 \cdot Z_{'0_cabo'}$) nos condutores de retorno de neutro/terra.
+            *Os cálculos de curto-circuito assimétricos consideram o acoplamento mútuo e a atenuação provocada pelo triplo da impedância de sequência zero (3 · Z₀_cabo) nos condutores de retorno de neutro/terra.
           </p>
         </div>
 
@@ -386,4 +361,4 @@ function cc() {
   );
 }
 
-export default cc;
+export default Cc;

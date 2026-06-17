@@ -82,7 +82,7 @@ function Sim() {
     };
   }, [fasores]);
 
-  // Manipulação direta digitada nos Inputs Numéricos
+  // Manipulação unificada para Inputs Numéricos e Sliders
   const handleInputChange = (phase, field, value) => {
     let numValue = parseFloat(value);
     if (isNaN(numValue)) numValue = 0;
@@ -99,7 +99,7 @@ function Sim() {
       ...prev,
       [phase]: {
         ...prev[phase],
-        [field]: numValue,
+        [field]: parseFloat(numValue.toFixed(1)),
       },
     }));
   };
@@ -170,7 +170,7 @@ function Sim() {
   const posC = polarToCartesian(fasores.C.mag, fasores.C.deg);
 
   return (
-    <div style={{ padding: '24px', fontFamily: 'Arial, sans-serif', backgroundColor: '#f1f5f9', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ padding: '24px', fontFamily: 'Arial, sans-serif', backgroundColor: '#f8fafc', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <h2 style={{ color: '#0f172a', marginBottom: '4px', fontWeight: 'bold' }}>ANÁLISE DE COMPONENTES SIMÉTRICAS</h2>
       <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '4px' }}>
         <Info size={16} /> Altere os valores **digitando**, usando as **barras** ou **arrastando** as pontas dos fasores no gráfico.
@@ -256,7 +256,7 @@ function Sim() {
             </div>
 
             {['A', 'B', 'C'].map((phase) => {
-              const colors = { A: '#dc2626', B: '#2563eb', C: '#16a34a' };
+              const colors = { A: '#dc2626', B: '#2563eb', C: '#16a34b' };
               return (
                 <div key={phase} style={{ marginBottom: '16px', paddingBottom: '12px', borderBottom: phase !== 'C' ? '1px dashed #f1f5f9' : 'none' }}>
                   
@@ -291,13 +291,29 @@ function Sim() {
                     </div>
                   </div>
 
-                  {/* Sliders de Apoio Visual */}
+                  {/* Sliders de Apoio Visual Corrigidos */}
                   <div style={{ display: 'flex', gap: '12px' }}>
                     <div style={{ flex: 1 }}>
-                      <input type="range" min="0" max="100" step="0.5" value={fasores[phase].mag} onChange={(e) => setFasores({...fasores, [phase]: { ...fasores[phase], mag: parseFloat(e.target.value) }})} style={{ width: '100%', accentColor: colors[phase] }} />
+                      <input 
+                        type="range" 
+                        min="0" 
+                        max="100" 
+                        step="0.5" 
+                        value={fasores[phase].mag} 
+                        onChange={(e) => handleInputChange(phase, 'mag', e.target.value)} 
+                        style={{ width: '100%', accentColor: colors[phase] }} 
+                      />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <input type="range" min="0" max="360" step="0.5" value={fasores[phase].deg} onChange={(e) => setFasores({...fasores, [phase]: { ...fasores[phase], deg: parseFloat(e.target.value) }})} style={{ width: '100%', accentColor: colors[phase] }} />
+                      <input 
+                        type="range" 
+                        min="0" 
+                        max="360" 
+                        step="0.5" 
+                        value={fasores[phase].deg} 
+                        onChange={(e) => handleInputChange(phase, 'deg', e.target.value)} 
+                        style={{ width: '100%', accentColor: colors[phase] }} 
+                      />
                     </div>
                   </div>
 
@@ -314,7 +330,7 @@ function Sim() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', borderRadius: '8px', backgroundColor: '#f8f5ff', borderLeft: '4px solid #7c3aed' }}>
                 <div>
                   <span style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', color: '#6d28d9' }}>Sequência Positiva (V₁)</span>
-                  <span style={{ fontSize: '11px', color: '#9333ea' }}>Componente equilibrada direta</span>
+                  <span style={{ fontSize: '11px', color: '#9333ea' }}></span>
                 </div>
                 <strong style={{ fontSize: '16px', color: '#5b21b6' }}>{componentes.pos.mag} V ∠ {componentes.pos.deg}°</strong>
               </div>
@@ -322,7 +338,7 @@ function Sim() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', borderRadius: '8px', backgroundColor: '#fff7ed', borderLeft: '4px solid #ea580c' }}>
                 <div>
                   <span style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', color: '#c2410c' }}>Sequência Negativa (V₂)</span>
-                  <span style={{ fontSize: '11px', color: '#ea580c' }}>Grau de desequilíbrio inverso</span>
+                  <span style={{ fontSize: '11px', color: '#ea580c' }}></span>
                 </div>
                 <strong style={{ fontSize: '16px', color: '#9a3412' }}>{componentes.neg.mag} V ∠ {componentes.neg.deg}°</strong>
               </div>
@@ -330,7 +346,7 @@ function Sim() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', borderRadius: '8px', backgroundColor: '#f8fafc', borderLeft: '4px solid #475569' }}>
                 <div>
                   <span style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', color: '#334155' }}>Sequência Zero (V₀)</span>
-                  <span style={{ fontSize: '11px', color: '#475569' }}>Fator de desbalanceamento de terra</span>
+                  <span style={{ fontSize: '11px', color: '#475569' }}></span>
                 </div>
                 <strong style={{ fontSize: '16px', color: '#1e293b' }}>{componentes.zero.mag} V ∠ {componentes.zero.deg}°</strong>
               </div>
