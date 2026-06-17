@@ -59,7 +59,7 @@ function Menu() {
       descricao: 'Cálculo de potência ativa, reativa e aparente em sistemas elétricos.'
     },
     {
-      id: 'capacitor',
+      id: 'cap',
       nome: 'Capacitor',
       componente: <Cap onVoltar={() => setTelaAtiva('menu')} />,
       icone: <ShieldAlert className="w-8 h-8 text-amber-600" />,
