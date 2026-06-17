@@ -7,6 +7,7 @@ import Harm from './harm';
 import Sim from './sim';
 import Tc from './tc';
 import Pot from './pot';
+import Cap from './cap';
 
 function Menu() {
   // Estado interno para controlar qual tela exibir no "body" do componente
@@ -56,6 +57,13 @@ function Menu() {
       componente: <Pot onVoltar={() => setTelaAtiva('menu')} />,
       icone: <ShieldAlert className="w-8 h-8 text-amber-600" />,
       descricao: 'Cálculo de potência ativa, reativa e aparente em sistemas elétricos.'
+    },
+    {
+      id: 'capacitor',
+      nome: 'Capacitor',
+      componente: <Cap onVoltar={() => setTelaAtiva('menu')} />,
+      icone: <ShieldAlert className="w-8 h-8 text-amber-600" />,
+      descricao: 'Cálculo de banco de capacitores.'
     }
   ];
 
