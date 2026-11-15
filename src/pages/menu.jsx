@@ -8,6 +8,7 @@ import Sim from './sim';
 import Tc from './tc';
 import Pot from './pot';
 import Cap from './cap';
+import Oscilo from './Oscilo';
 
 function Menu() {
   // Estado interno para controlar qual tela exibir no "body" do componente
@@ -64,6 +65,13 @@ function Menu() {
       componente: <Cap onVoltar={() => setTelaAtiva('menu')} />,
       icone: <ShieldAlert className="w-8 h-8 text-amber-600" />,
       descricao: 'Cálculo de banco de capacitores.'
+    },
+    {
+      id: 'oscilografia',
+      nome: 'Leitor de Oscilografia',
+      componente: <Oscilo onVoltar={() => setTelaAtiva('menu')} />,
+      icone: <Activity className="w-8 h-8 text-cyan-600" />,
+      descricao: 'Leitura e análise de registros de oscilografia.'
     }
   ];
 

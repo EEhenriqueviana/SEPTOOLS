@@ -5,4 +5,176 @@
 	.bx-menu {
 		display: none !important;
 	}
+
+	.oscilo-resizable-grid {
+		grid-template-columns:
+			minmax(0, var(--oscilo-left-panel-fr))
+			8px
+			minmax(340px, var(--oscilo-right-panel-fr));
+	}
+}
+
+.app-scrollbar {
+	color-scheme: dark;
+	--oscilo-grid-color: #303943;
+	--oscilo-zero-line-color: #64748b;
+	--oscilo-axis-color: #7b8794;
+	--oscilo-axis-label: #9aa4ae;
+	--oscilo-axis-text: #cbd5e1;
+	--oscilo-phasor-grid: #39434d;
+	--oscilo-scrollbar-track: #11161c;
+	--oscilo-scrollbar-thumb: #475569;
+	--oscilo-scrollbar-thumb-hover: #06b6d4;
+}
+
+.app-scrollbar.oscilo-theme-light {
+	color-scheme: light;
+	--oscilo-grid-color: #d5dde7;
+	--oscilo-zero-line-color: #64748b;
+	--oscilo-axis-color: #64748b;
+	--oscilo-axis-label: #475569;
+	--oscilo-axis-text: #334155;
+	--oscilo-phasor-grid: #cbd5e1;
+	--oscilo-scrollbar-track: #f1f5f9;
+	--oscilo-scrollbar-thumb: #94a3b8;
+	--oscilo-scrollbar-thumb-hover: #0891b2;
+	background-color: #f1f5f9 !important;
+	color: #0f172a !important;
+}
+
+.oscilo-theme-light [class~="bg-[#11161c]"],
+.oscilo-theme-light [class~="bg-[#171c22]"],
+.oscilo-theme-light [class~="bg-[#0f1318]"],
+.oscilo-theme-light [class~="bg-[#11161c]/95"] {
+	background-color: #ffffff !important;
+}
+
+.oscilo-theme-light [class~="bg-[#14191f]"] {
+	background-color: #f8fafc !important;
+}
+
+.oscilo-theme-light [class~="bg-[#1d2935]"] {
+	background-color: #e0f2fe !important;
+}
+
+.oscilo-theme-light [class~="bg-[#202832]"] {
+	background-color: #e2e8f0 !important;
+}
+
+.oscilo-theme-light [class~="hover:bg-[#202832]"]:hover {
+	background-color: #e2e8f0 !important;
+}
+
+.oscilo-theme-light [class~="bg-[#303943]"] {
+	background-color: #e2e8f0 !important;
+}
+
+.oscilo-theme-light [class~="bg-cyan-950"] {
+	background-color: #cffafe !important;
+}
+
+.oscilo-theme-light [class~="bg-red-950/60"] {
+	background-color: #fef2f2 !important;
+}
+
+.oscilo-theme-light [class~="text-white"],
+.oscilo-theme-light [class~="text-slate-100"] {
+	color: #0f172a !important;
+}
+
+.oscilo-theme-light [class~="text-slate-200"] {
+	color: #1e293b !important;
+}
+
+.oscilo-theme-light [class~="text-slate-300"] {
+	color: #334155 !important;
+}
+
+.oscilo-theme-light [class~="text-slate-400"] {
+	color: #475569 !important;
+}
+
+.oscilo-theme-light [class~="text-slate-500"] {
+	color: #64748b !important;
+}
+
+.oscilo-theme-light [class~="text-cyan-300"],
+.oscilo-theme-light [class~="text-cyan-400"],
+.oscilo-theme-light [class~="text-cyan-500"] {
+	color: #0e7490 !important;
+}
+
+.oscilo-theme-light [class~="text-amber-300"] {
+	color: #92400e !important;
+}
+
+.oscilo-theme-light [class~="text-red-200"] {
+	color: #991b1b !important;
+}
+
+.oscilo-theme-light [class~="hover:text-white"]:hover {
+	color: #0f172a !important;
+}
+
+.oscilo-theme-light [class~="hover:text-slate-200"]:hover {
+	color: #1e293b !important;
+}
+
+.oscilo-theme-light [class~="border-[#303943]"],
+.oscilo-theme-light [class~="border-[#39434d]"],
+.oscilo-theme-light [class~="border-[#46515d]"],
+.oscilo-theme-light [class~="border-[#4b5563]"] {
+	border-color: #cbd5e1 !important;
+}
+
+.oscilo-theme-light [class~="border-red-900"] {
+	border-color: #fecaca !important;
+}
+
+.oscilo-theme-light [class~="hover:border-cyan-600"]:hover {
+	border-color: #0891b2 !important;
+}
+
+.oscilo-signal-menu,
+.app-scrollbar,
+html,
+body,
+#root {
+	scrollbar-color: var(--oscilo-scrollbar-thumb, #475569) var(--oscilo-scrollbar-track, #11161c);
+	scrollbar-width: thin;
+}
+
+.oscilo-signal-menu::-webkit-scrollbar,
+.app-scrollbar::-webkit-scrollbar,
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#root::-webkit-scrollbar {
+	width: 8px;
+}
+
+.oscilo-signal-menu::-webkit-scrollbar-track,
+.app-scrollbar::-webkit-scrollbar-track,
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+#root::-webkit-scrollbar-track {
+	background: var(--oscilo-scrollbar-track, #11161c);
+	border-radius: 9999px;
+}
+
+.oscilo-signal-menu::-webkit-scrollbar-thumb,
+.app-scrollbar::-webkit-scrollbar-thumb,
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+#root::-webkit-scrollbar-thumb {
+	background: var(--oscilo-scrollbar-thumb, #475569);
+	border: 2px solid var(--oscilo-scrollbar-track, #11161c);
+	border-radius: 9999px;
+}
+
+.oscilo-signal-menu::-webkit-scrollbar-thumb:hover,
+.app-scrollbar::-webkit-scrollbar-thumb:hover,
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+#root::-webkit-scrollbar-thumb:hover {
+	background: var(--oscilo-scrollbar-thumb-hover, #06b6d4);
 }
