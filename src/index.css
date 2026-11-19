@@ -1,5 +1,32 @@
 @import "tailwindcss";
 
+@media print {
+	@page {
+		size: A4;
+		margin: 15mm;
+	}
+
+	body * {
+		visibility: hidden !important;
+	}
+
+	#arc-flash-label,
+	#arc-flash-label * {
+		visibility: visible !important;
+	}
+
+	#arc-flash-label {
+		position: fixed !important;
+		top: 0 !important;
+		left: 0 !important;
+		width: 180mm !important;
+		max-width: none !important;
+		margin: 0 !important;
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+	}
+}
+
 /* Hide mobile menu icon on wide screens to avoid overlap with desktop menu */
 @media (min-width: 1280px) {
 	.bx-menu {
@@ -136,11 +163,15 @@
 }
 
 .oscilo-signal-menu,
-.app-scrollbar,
+.app-scrollbar {
+	scrollbar-color: var(--oscilo-scrollbar-thumb, #475569) var(--oscilo-scrollbar-track, #11161c);
+	scrollbar-width: thin;
+}
+
 html,
 body,
 #root {
-	scrollbar-color: var(--oscilo-scrollbar-thumb, #475569) var(--oscilo-scrollbar-track, #11161c);
+	scrollbar-color: #94a3b8 #f1f5f9;
 	scrollbar-width: thin;
 }
 
@@ -153,28 +184,40 @@ body::-webkit-scrollbar,
 }
 
 .oscilo-signal-menu::-webkit-scrollbar-track,
-.app-scrollbar::-webkit-scrollbar-track,
-html::-webkit-scrollbar-track,
-body::-webkit-scrollbar-track,
-#root::-webkit-scrollbar-track {
+.app-scrollbar::-webkit-scrollbar-track {
 	background: var(--oscilo-scrollbar-track, #11161c);
 	border-radius: 9999px;
 }
 
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+#root::-webkit-scrollbar-track {
+	background: #f1f5f9;
+	border-radius: 9999px;
+}
+
 .oscilo-signal-menu::-webkit-scrollbar-thumb,
-.app-scrollbar::-webkit-scrollbar-thumb,
-html::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-thumb,
-#root::-webkit-scrollbar-thumb {
+.app-scrollbar::-webkit-scrollbar-thumb {
 	background: var(--oscilo-scrollbar-thumb, #475569);
 	border: 2px solid var(--oscilo-scrollbar-track, #11161c);
 	border-radius: 9999px;
 }
 
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+#root::-webkit-scrollbar-thumb {
+	background: #94a3b8;
+	border: 2px solid #f1f5f9;
+	border-radius: 9999px;
+}
+
 .oscilo-signal-menu::-webkit-scrollbar-thumb:hover,
-.app-scrollbar::-webkit-scrollbar-thumb:hover,
+.app-scrollbar::-webkit-scrollbar-thumb:hover {
+	background: var(--oscilo-scrollbar-thumb-hover, #06b6d4);
+}
+
 html::-webkit-scrollbar-thumb:hover,
 body::-webkit-scrollbar-thumb:hover,
 #root::-webkit-scrollbar-thumb:hover {
-	background: var(--oscilo-scrollbar-thumb-hover, #06b6d4);
+	background: #64748b;
 }

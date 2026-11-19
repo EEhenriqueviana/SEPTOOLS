@@ -62,7 +62,11 @@ function App() {
       </main>
 
       <footer>
-        <p className="text-center text-gray-500 text-sm py-4">© 2026 SEP TOOLS - Henrique Viana Bastos. Todos os direitos reservados.</p>
+        <p className="text-center text-gray-500 text-sm py-4">
+          © 2026 SEP TOOLS - Henrique Viana Bastos. Todos os direitos reservados.
+          <br />
+          Ferramentas geradas por IA | Pode conter erros | Software para cunho educacional | Não nos responsabilizamos por possíveis erros de cálculo
+        </p>
       </footer>
     </div>
   );

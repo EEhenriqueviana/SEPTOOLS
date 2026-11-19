@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LineChart, Share2, ShieldAlert, Activity, Zap, ArrowLeft } from 'lucide-react';
+import { LineChart, Share2, ShieldAlert, Activity, Zap, ArrowLeft, Flame } from 'lucide-react';
 // Seus componentes importados
 import Cc from './cc';
 import Coord from './coord';
@@ -9,6 +9,7 @@ import Tc from './tc';
 import Pot from './pot';
 import Cap from './cap';
 import Oscilo from './Oscilo';
+import Energ from './energ';
 
 function Menu() {
   // Estado interno para controlar qual tela exibir no "body" do componente
@@ -72,6 +73,13 @@ function Menu() {
       componente: <Oscilo onVoltar={() => setTelaAtiva('menu')} />,
       icone: <Activity className="w-8 h-8 text-cyan-600" />,
       descricao: 'Leitura e análise de registros de oscilografia.'
+    },
+    {
+      id: 'arc_flash',
+      nome: 'Energia Incidente / Arc Flash',
+      componente: <Energ onVoltar={() => setTelaAtiva('menu')} />,
+      icone: <Flame className="w-8 h-8 text-orange-600" />,
+      descricao: 'Cálculo IEEE 1584-2018, classificação de risco e etiqueta de arco elétrico.'
     }
   ];
 
